@@ -33,7 +33,10 @@ dependencies:
   m3u: any
   xml: any
   http: any
+  intl: any
   path_provider: any
+  video_player: any
+  wakelock: any
 
 dev_dependencies:
   flutter_test:

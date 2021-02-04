@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.itv">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
    <application
+   android:usesCleartextTraffic="true"
         android:label="itv"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -9,7 +9,7 @@ import 'package:itv/models/helper.dart';
 import 'package:itv/objectbox.g.dart';
 
 class ProgressWidget extends StatefulWidget {
-  ProgressWidget({Key key, this.id, this.showTitle}) : super(key: key);
+  ProgressWidget({Key key, this.id, this.showTitle = true}) : super(key: key);
 
   final int id;
   final bool showTitle;
@@ -50,16 +50,21 @@ class _ProgressWidget extends State<ProgressWidget> {
   @override
   Widget build(BuildContext context) {
     if (_item == null) return SizedBox.shrink();
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(
-        _item.title,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      LinearProgressIndicator(
-        minHeight: 3,
-        value: _item.stop < Playlist.cls.currTime ? null : _progress,
-      ),
-    ]);
+    if (widget.showTitle)
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          _item.title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        LinearProgressIndicator(
+          minHeight: 3,
+          value: _item.stop < Playlist.cls.currTime ? null : _progress,
+        ),
+      ]);
+    return LinearProgressIndicator(
+      minHeight: 3,
+      value: _item.stop < Playlist.cls.currTime ? null : _progress,
+    );
   }
 }

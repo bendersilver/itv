@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:itv/models/Playlist.dart';
 import 'package:itv/models/PlaylistItem.dart';
-import 'package:itv/models/helper.dart';
+import 'package:itv/widget/Player.dart';
 import 'package:itv/widget/Progress.dart';
 
 class PlaylistItemWidget extends StatefulWidget {
@@ -24,18 +25,36 @@ class _PlaylistItemWidget extends State<PlaylistItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.item.hide | widget.item.del) return SizedBox.shrink();
+    if ((!Playlist.showHide && widget.item.hide) | widget.item.del)
+      return SizedBox.shrink();
     return ListTile(
       onTap: () {
         if (widget.onTap == null) {
-          // Navigator.pushNamed(context, M3UPlayer.routeName,
-          //     arguments: {"ch": widget.item});
+          Navigator.pushNamed(context, M3UPlayer.routeName,
+              arguments: {"ch": widget.item});
         } else {
           widget.onTap.call();
         }
       },
-      onLongPress: () {
-        print("onLongPress");
+      onLongPress: () async {
+        await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        title: Text(widget.item.hide ? "Показать" : "Скрыть"),
+                        onTap: () {
+                          widget.item.hide = !widget.item.hide;
+                          Playlist.cls.updateItem(widget.item);
+                          setState(() {});
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  ),
+                ));
         // await showDialogAction(context: context, ch: widget.item);
         // setState(() {});
       },

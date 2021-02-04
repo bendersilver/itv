@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:itv/models/XmlTv.dart';
 import 'package:m3u/m3u.dart';
@@ -13,7 +14,21 @@ const M3U_URL = "http://ott.tv.planeta.tc/plst.m3u?4k";
 const XMLTV_URL =
     "http://ott.tv.planeta.tc/epg/program.xml?fields=desc&fields=icon";
 
+class Settings {
+  String name;
+  int val;
+  Settings(this.name, this.val);
+}
+
 class Playlist {
+  static bool showHide = false;
+  static int sortSel = 1;
+  static List<Settings> sort = [
+    Settings("По номеру", 1),
+    Settings("По имени", 2),
+    Settings("По id", 3),
+  ];
+
   List<XmlTvItem> _xmlTV = [];
   List<PlaylistItem> items = [];
   Timer _timer;
@@ -27,7 +42,7 @@ class Playlist {
     if (store == null) store = await getStore();
     if (items.isEmpty) {
       await fetchM3U();
-      await fetchXMLTv();
+      fetchXMLTv();
     }
     items = store.box<PlaylistItem>().getAll();
     if (_timer == null) {
@@ -56,9 +71,19 @@ class Playlist {
     q.close();
   }
 
-  close() {
+  refresh() {
     _timer.cancel();
+    _xmlTV = [];
+    items = [];
+  }
+
+  close() {
+    refresh();
     store.close();
+  }
+
+  updateItem(PlaylistItem i) {
+    store.box<PlaylistItem>().put(i);
   }
 
   XmlTvItem getXmlTvByChID(int id) {

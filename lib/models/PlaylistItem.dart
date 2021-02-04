@@ -23,7 +23,7 @@ class PlaylistItem {
   int order;
 
   @Transient()
-  bool menuOpen;
+  bool openNaw;
 
   PlaylistItem({
     this.channelID,
