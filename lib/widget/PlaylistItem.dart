@@ -40,6 +40,7 @@ class _PlaylistItemWidget extends State<PlaylistItemWidget> {
         await showDialog(
             context: context,
             builder: (context) => AlertDialog(
+                  contentPadding: EdgeInsets.zero,
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

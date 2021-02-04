@@ -35,6 +35,18 @@ class _PlayerPortrait extends State<PlayerPortrait> {
 
   @override
   Widget build(BuildContext context) {
+    switch (Playlist.sortSel) {
+      case 1:
+        Playlist.cls.items.sort((a, b) => a.order.compareTo(b.order));
+        break;
+      case 2:
+        Playlist.cls.items.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        break;
+      case 3:
+        Playlist.cls.items.sort((a, b) => a.channelID.compareTo(b.channelID));
+        break;
+    }
     return Scaffold(
       body: Column(
         children: [
@@ -65,7 +77,6 @@ class _PlayerPortrait extends State<PlayerPortrait> {
                     id: widget.item.channelID,
                     showTitle: false,
                   ),
-                  // child: Progress(item: widget.item),
                 )
               ],
             ),
@@ -90,7 +101,6 @@ class _PlayerPortrait extends State<PlayerPortrait> {
                     onTap: () {
                       widget.updateCtrl(item);
                     },
-                    // subtitle: ProgrammWidget(item: _item),
                   );
                 }),
           )

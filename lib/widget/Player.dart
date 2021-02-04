@@ -16,6 +16,7 @@ class M3UPlayer extends StatefulWidget {
 }
 
 class _M3UPlayerState extends State<M3UPlayer> {
+  ScaffoldFeatureController _sCtrl;
   PlaylistItem _item;
   VideoPlayerController _ctrl;
   Future<void> _initPlayer;
@@ -28,6 +29,7 @@ class _M3UPlayerState extends State<M3UPlayer> {
 
   @override
   void dispose() {
+    _sCtrl?.close();
     _ctrl.dispose();
     Wakelock.disable();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
@@ -47,6 +49,18 @@ class _M3UPlayerState extends State<M3UPlayer> {
         _initPlayer = _ctrl.initialize();
         _ctrl.setLooping(true);
         _ctrl.setVolume(1);
+        _ctrl.addListener(() {
+          if (_ctrl.value.hasError) {
+            _sCtrl?.close();
+            final snackBar = SnackBar(
+              duration: Duration(seconds: 10),
+              backgroundColor: Colors.red,
+              content: Text(_ctrl.value.errorDescription),
+            );
+
+            _sCtrl = ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+        });
       }
     });
   }
@@ -63,6 +77,18 @@ class _M3UPlayerState extends State<M3UPlayer> {
     _initPlayer = _ctrl.initialize();
     _ctrl.setLooping(true);
     _ctrl.setVolume(1);
+    _ctrl.addListener(() {
+      if (_ctrl.value.hasError) {
+        _sCtrl?.close();
+        final snackBar = SnackBar(
+          duration: Duration(seconds: 10),
+          backgroundColor: Colors.red,
+          content: Text(_ctrl.value.errorDescription),
+        );
+
+        _sCtrl = ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
     setState(() {});
   }
 
